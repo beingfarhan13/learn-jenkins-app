@@ -7,8 +7,6 @@ pipeline {
     }
 
     stages {
-        /*
-
         stage('Build') {
             agent {
                 docker {
@@ -18,6 +16,7 @@ pipeline {
             }
             steps {
                 sh '''
+                    echo "Building on `node --version`"
                     ls -la
                     node --version
                     npm --version
@@ -27,7 +26,6 @@ pipeline {
                 '''
             }
         }
-        */
 
         stage('Tests') {
             parallel {
