@@ -4,7 +4,6 @@ pipeline {
     environment {
         NETLIFY_SITE_ID = '21ac4ed1-3190-4348-be9b-8a6aa1e84d85'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-        CI_ENVIRONMENT_URL = 'https://subtle-kelpie-1b0a61.netlify.app'
     }
 
     stages {
