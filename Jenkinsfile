@@ -7,7 +7,7 @@ pipeline {
     }
 
     stages {
-        /*stage('Build') {
+        stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -25,7 +25,7 @@ pipeline {
                     ls -la
                 '''
             }
-        }*/
+        }
 
         stage('Tests') {
             parallel {
