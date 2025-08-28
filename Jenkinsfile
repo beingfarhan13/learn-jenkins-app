@@ -85,7 +85,7 @@ pipeline {
             }
 
             environment {
-                CI_ENVIRONMENT_URL = "$env.STAGING_URL"
+                CI_ENVIRONMENT_URL = "To be set after deploy"
             }
 
             steps {
