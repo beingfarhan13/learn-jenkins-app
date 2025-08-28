@@ -85,7 +85,7 @@ pipeline {
             }
 
             environment {
-                CI_ENVIRONMENT_URL = "To_be_set_after_deploy"
+                CI_ENVIRONMENT_URL = 'To_be_set_after_deploy'
             }
 
             steps {
