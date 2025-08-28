@@ -77,26 +77,23 @@ pipeline {
             }
         }
 
-        stage('Deploy Staging') {
+        stage('Deploy staging') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    image 'node:18-alpine'
                     reuseNode true
                 }
             }
-
             steps {
                 sh '''
-                    npm install netlify-cli@20.1.1
-                    npm install node-jq
+                    npm install netlify-cli node-jq
                     node_modules/.bin/netlify --version
-                    echo "Deploymement on to site: $NETLIFY_SITE_ID"
+                    echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
-                    node_modules/.bin/node-jq '.deploy_url' deploy-output.json
                 '''
                 script {
-                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq '.deploy_url' deploy-output.json", returnStdout: true)
+                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
                 }
             }
         }
@@ -109,9 +106,9 @@ pipeline {
                 }
             }
 
-        environment {
-            CI_ENVIRONMENT_URL = '$env.STAGING_URL'
-        }
+            environment {
+                CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
+            }
 
             steps {
                 sh '''
@@ -125,7 +122,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Approval') {
             steps {
                 input message: 'Ready to Deploy?', ok: 'Yes, I am damn sure'
