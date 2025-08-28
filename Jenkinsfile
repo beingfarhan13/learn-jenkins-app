@@ -129,6 +129,7 @@ pipeline {
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --prod
                     npx playwright test  --reporter=html
+                    echo "CI/CD DONE"
                 '''
             }
 
