@@ -7,7 +7,7 @@ pipeline {
     }
 
     stages {
-        /*stage('Build') {
+        stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -74,7 +74,7 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
 
         stage('Deploy staging') {
             agent {
@@ -107,7 +107,7 @@ pipeline {
             }
 
             environment {
-                CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
+                CI_ENVIRONMENT_URL = "$env.STAGING_URL"
             }
 
             steps {
