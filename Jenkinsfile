@@ -94,7 +94,7 @@ pipeline {
                     npm install node-jq
                     node_modules/.bin/netlify --version
                     node_modules/.bin/netlify status
-                    CI_ENVIRONMENT_URL=$(node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json)
+                    CI_ENVIRONMENT_URL=$(node_modules/.bin/netlify deploy --dir=build --json)
                     npx playwright test  --reporter=html
                 '''
             }
