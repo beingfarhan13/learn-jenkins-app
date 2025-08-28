@@ -85,7 +85,7 @@ pipeline {
             }
 
             environment {
-                CI_ENVIRONMENT_URL = 'STAGING_URL_TO_BE_SET'
+                CI_ENVIRONMENT_URL = "To_be_set_after_deploy
             }
 
             steps {
@@ -93,9 +93,8 @@ pipeline {
                     npm install netlify-cli@20.1.1 
                     npm install node-jq
                     node_modules/.bin/netlify --version
-                    echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
-                    CI_ENVIRONMENT_URL=$(node_modules/.bin/netlify deploy --dir=build --json)
+                    CI_ENVIRONMENT_URL=$(node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json)
                     npx playwright test  --reporter=html
                 '''
             }
