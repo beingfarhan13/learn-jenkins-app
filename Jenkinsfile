@@ -2,12 +2,11 @@ pipeline {
     agent any
 
     environment {
-        NETLIFY_SITE_ID = 'YOUR NETLIFY SITE ID'
+        NETLIFY_SITE_ID = '21ac4ed1-3190-4348-be9b-8a6aa1e84d85'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
     }
 
     stages {
-
         stage('Build') {
             agent {
                 docker {
@@ -17,6 +16,7 @@ pipeline {
             }
             steps {
                 sh '''
+                    echo "Building on `node --version`"
                     ls -la
                     node --version
                     npm --version
@@ -69,7 +69,7 @@ pipeline {
 
                     post {
                         always {
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Local E2E', reportTitles: '', useWrapperFileDirectly: true])
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright Local', reportTitles: '', useWrapperFileDirectly: true])
                         }
                     }
                 }
@@ -85,7 +85,8 @@ pipeline {
             }
             steps {
                 sh '''
-                    npm install netlify-cli node-jq
+                    npm install netlify-cli 
+                    npm install node-jq
                     node_modules/.bin/netlify --version
                     echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
@@ -97,7 +98,7 @@ pipeline {
             }
         }
 
-        stage('Staging E2E') {
+        /*stage('Staging E2E') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -120,35 +121,15 @@ pipeline {
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Staging E2E', reportTitles: '', useWrapperFileDirectly: true])
                 }
             }
-        }
+        }*/
 
         stage('Approval') {
             steps {
-                timeout(time: 15, unit: 'MINUTES') {
-                    input message: 'Do you wish to deploy to production?', ok: 'Yes, I am sure!'
-                }
+                input message: 'Ready to Deploy?', ok: 'Yes, I am damn sure'
             }
         }
-
-        stage('Deploy prod') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    npm install netlify-cli
-                    node_modules/.bin/netlify --version
-                    echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --prod
-                '''
-            }
-        }
-
-        stage('Prod E2E') {
+        
+        stage('Deploy Prod') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -156,9 +137,28 @@ pipeline {
                 }
             }
 
-            environment {
-                CI_ENVIRONMENT_URL = 'YOUR NETLIFY URL'
+            steps {
+                sh '''
+                    npm install netlify-cli@20.1.1
+                    node_modules/.bin/netlify --version
+                    echo "Deploymement on to site: $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --prod
+                '''
             }
+        }
+
+        stage('prodE2E') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            }
+
+        environment {
+            CI_ENVIRONMENT_URL = 'https://subtle-kelpie-1b0a61.netlify.app'
+        }
 
             steps {
                 sh '''
