@@ -16,7 +16,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'aws-cli --version'
+                sh 'aws --version'
             }
         }
         stage ('Docker') {
