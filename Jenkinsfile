@@ -12,7 +12,7 @@ pipeline {
             agent {
                 docker {
                     image 'amazon/aws-cli'
-                    argd "--entrypoint=''"
+                    args "--entrypoint=''"
                     reuseNode true
                 }
             }
