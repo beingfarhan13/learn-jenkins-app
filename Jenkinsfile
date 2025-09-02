@@ -159,6 +159,8 @@ pipeline {
                         aws --version
                         aws s3 sync build s3://$AWS_S3_BUCKET
                         aws ecs register-task-definition --cli-input-json file://aws/taskDefinition.json
+                        aws ecs update-service --cluster learn-jenkins-20250830 --service 
+learn-jenkins-taskDefinition-prod-service  --task-definition learn-jenkins-taskDefinition-prod:2
 
                     '''
                 }
