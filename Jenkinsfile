@@ -145,7 +145,7 @@ pipeline {
             agent {
                 docker {
                     image 'amazon/aws-cli'
-                    args "--entrypoint=''"
+                    args "-u root --entrypoint=''"
                     reuseNode true
                 }
             }
@@ -157,10 +157,10 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'myAwsS3Passkey', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
                         aws --version
+                        yum install jq -y
                         aws s3 sync build s3://$AWS_S3_BUCKET
-                        aws ecs register-task-definition --cli-input-json file://aws/taskDefinition.json
-                        aws ecs update-service --cluster learn-jenkins-20250830 --service learn-jenkins-taskDefinition-prod-service  --task-definition learn-jenkins-taskDefinition-prod:2
-
+                        LATEST_TD_DEFINITION = $(aws ecs register-task-definition --cli-input-json file://aws/taskDefinition.json | jq '.taskDefinition.revision')
+                        aws ecs update-service --cluster learn-jenkins-20250830 --service learn-jenkins-taskDefinition-prod-service  --task-definition learn-jenkins-taskDefinition-prod:$LATEST_TD_DEFINITION
                     '''
                 }
             }
