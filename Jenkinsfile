@@ -151,6 +151,7 @@ pipeline {
             }
             environment {
                 AWS_S3_BUCKET = 'learn-jenkins-20250830'
+                AWS_DEFAULT_REGION = 'us-east-1'
             }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'myAwsS3Passkey', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
