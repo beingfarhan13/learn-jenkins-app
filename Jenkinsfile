@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage ('Docker') {
             steps {
-                sh 'docker build -t my-playwright .'
+                sh 'docker build -f ci/Dockerfile -t my-playwright .'
             }
         }
         stage('Build') {
@@ -141,6 +141,12 @@ pipeline {
             }
         }
 
+        stage ('Build docker image') {
+            steps {
+                sh 'docker build -t myjenkinsapp .'
+            }
+        }
+
         stage ('AWS CLI') {
             agent {
                 docker {
@@ -161,6 +167,7 @@ pipeline {
                         aws s3 sync build s3://$AWS_S3_BUCKET
                         LATEST_TD_DEFINITION=$(aws ecs register-task-definition --cli-input-json file://aws/taskDefinition.json | jq '.taskDefinition.revision')
                         aws ecs update-service --cluster learn-jenkins-20250830 --service learn-jenkins-taskDefinition-prod-service  --task-definition learn-jenkins-taskDefinition-prod:$LATEST_TD_DEFINITION
+                        aws ecs wait services stable -- cluster learn-jenkins-20250830 --services learn-jenkins-taskDefinition-prod-service
                     '''
                 }
             }
