@@ -187,8 +187,8 @@ pipeline {
                         sed -i "s/#APP_VERSION#/$REACT_APP_VERSION/g" aws/taskDefinition.json
                         aws s3 sync build s3://$AWS_S3_BUCKET
                         LATEST_TD_DEFINITION=$(aws ecs register-task-definition --cli-input-json file://aws/taskDefinition.json | jq '.taskDefinition.revision')
-                        aws ecs update-service --cluster learn-jenkins-app-20250904 --service learn-jenkins-taskDefinition-prod-service  --task-definition learn-jenkins-taskDefinition-prod:$LATEST_TD_DEFINITION
-                        # aws ecs wait services-stable --cluster learn-jenkins-app-20250904 --services learn-jenkins-taskDefinition-prod-service
+                        aws ecs update-service --cluster learn-jenkins-app-20250904 --service LearnJenkinsApp-TaskDefinition-Prod-service  --task-definition LearnJenkinsApp-TaskDefinition-Prod:$LATEST_TD_DEFINITION
+                        # aws ecs wait services-stable --cluster learn-jenkins-app-20250904 --services LearnJenkinsApp-TaskDefinition-Prod-service
                         echo "DEPLOYMENT COMPLETE"
                     '''
                 }
