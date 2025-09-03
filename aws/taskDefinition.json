@@ -21,7 +21,7 @@
     ],
     "volumes": [],
     "networkMode": "awsvpc",
-    "memory": "3 GB",
-    "cpu": "1 vCPU",
+    "memory": "512",
+    "cpu": "256",
     "executionRoleArn": "arn:aws:iam::853452245552:role/ecsTaskExecutionRole"
 }
