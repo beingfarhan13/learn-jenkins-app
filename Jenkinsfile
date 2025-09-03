@@ -6,7 +6,7 @@ pipeline {
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
         REACT_APP_VERSION = "1.0.${BUILD_NUMBER}"
         AWS_DOCKER_REGISTRY = '853452245552.dkr.ecr.us-east-1.amazonaws.com'
-        APP_NAME = 'myjenkinsapp'
+        APP_NAME = 'learnjenkinsapp'
     }
 
     stages {
