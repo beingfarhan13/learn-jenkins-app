@@ -188,7 +188,7 @@ pipeline {
                         aws s3 sync build s3://$AWS_S3_BUCKET
                         LATEST_TD_DEFINITION=$(aws ecs register-task-definition --cli-input-json file://aws/taskDefinition.json | jq '.taskDefinition.revision')
                         aws ecs update-service --cluster learn-jenkins-app-202500903 --service learn-jenkins-taskDefinition-prod-service  --task-definition learn-jenkins-taskDefinition-prod:$LATEST_TD_DEFINITION
-                        aws ecs wait services-stable --cluster learn-jenkins-app-202500903 --services learn-jenkins-taskDefinition-prod-service
+                        # aws ecs wait services-stable --cluster learn-jenkins-app-202500903 --services learn-jenkins-taskDefinition-prod-service
                         echo "DEPLOYMENT DONE"
                     '''
                 }
