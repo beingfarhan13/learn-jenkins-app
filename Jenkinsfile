@@ -152,7 +152,7 @@ pipeline {
 
             steps {
                 sh '''
-                    apt intall install docker
+                    apt install docker
                     docker build -t myjenkinsapp .
                 '''
             }
