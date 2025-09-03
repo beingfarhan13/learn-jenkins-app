@@ -5,6 +5,8 @@ pipeline {
         NETLIFY_SITE_ID = '21ac4ed1-3190-4348-be9b-8a6aa1e84d85'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
         REACT_APP_VERSION = "1.0.${BUILD_NUMBER}"
+        AWS_DOCKER_REGISTRY = '853452245552.dkr.ecr.us-east-1.amazonaws.com'
+        APP_NAME = 'myjenkinsapp'
     }
 
     stages {
@@ -153,9 +155,13 @@ pipeline {
                 }
             }
             steps {
-                sh '''
-                    docker build -t myjenkinsapp .
-                '''
+                withCredentials([usernamePassword(credentialsId: 'myAwsS3Passkey', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                    sh '''
+                        docker build -t $AWS_DOCKER_REGISTRY/$APP_NAME:$REACT_APP_VERSION .
+                        aws ecr get-login-password | docker --username AWS --password stdin $AWS_DOCKER_REGISTRY
+                        docker push $AWS_DOCKER_REGISTRY/$APP_NAME:$REACT_APP_VERSION
+                    '''
+                }
             }
         }
 
