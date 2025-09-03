@@ -161,7 +161,6 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'myAwsS3Passkey', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
                         docker build -t $AWS_DOCKER_REGISTRY/$APP_NAME:$REACT_APP_VERSION .
-                        sed -i "s/#APP_VERSION#/$REACT_APP_VERSION/g" aws/taskDefinition.json
                         aws ecr get-login-password | docker login --username AWS --password-stdin $AWS_DOCKER_REGISTRY
                         docker push $AWS_DOCKER_REGISTRY/$APP_NAME:$REACT_APP_VERSION
                     '''
@@ -185,6 +184,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'myAwsS3Passkey', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
                         aws --version
+                        sed -i "s/#APP_VERSION#/$REACT_APP_VERSION/g" aws/taskDefinition.json
                         aws s3 sync build s3://$AWS_S3_BUCKET
                         LATEST_TD_DEFINITION=$(aws ecs register-task-definition --cli-input-json file://aws/taskDefinition.json | jq '.taskDefinition.revision')
                         aws ecs update-service --cluster learn-jenkins-20250830 --service learn-jenkins-taskDefinition-prod-service  --task-definition learn-jenkins-taskDefinition-prod:$LATEST_TD_DEFINITION
