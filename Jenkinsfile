@@ -11,6 +11,7 @@ pipeline {
             steps {
                 echo 'With Docker'
                 sh 'npm -v'
+                sh 'npm install'
                 sh 'npm run build'
             }
         }
