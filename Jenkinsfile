@@ -10,6 +10,7 @@ pipeline {
             }
             steps {
                 echo 'With Docker'
+                sh 'npm install'
                 sh 'npm run build'
             }
         }
